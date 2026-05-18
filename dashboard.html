@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="chat-container">
+
+    <h2>Welcome {{ username }}</h2>
+
+    <div id="chat-box"></div>
+
+    <input type="text" id="message" placeholder="Type message">
+
+    <button onclick="sendMessage()">Send</button>
+
+    <a href="/logout">Logout</a>
+
+</div>
+
+<script>
+
+async function sendMessage() {
+
+    let message = document.getElementById("message").value;
+
+    let response = await fetch("/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            message: message
+        })
+    });
+
+    let data = await response.json();
+
+    let chatBox = document.getElementById("chat-box");
+
+    chatBox.innerHTML += `
+        <p><b>You:</b> ${message}</p>
+        <p><b>Bot:</b> ${data.response}</p>
+    `;
+
+    document.getElementById("message").value = "";
+}
+
+</script>
+
+</body>
+</html>
